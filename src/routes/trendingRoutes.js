@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/trending-keywords', async (req, res) => {
   try {
     const response = await axios.get('https://api.unsplash.com/topics', {
       params: { per_page: 10 },
