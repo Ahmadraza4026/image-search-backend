@@ -7,7 +7,6 @@ import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import authMiddleware from './middleware/authMiddleware.js';
-import { sendResetPasswordEmail } from './utils/sendResetPasswordEmail.js';
 import favoritesRoutes from './routes/favoritesRoutes.js';
 import unsplashRoutes from './routes/unsplash.js';
 import searchRoutes from './routes/search.js';
@@ -17,7 +16,7 @@ import pexelsRoutes from './routes/pexelsRoutes.js';
 const app = express();
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true,
 };
 
@@ -30,17 +29,14 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
 
-// ✅ Routes
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api', unsplashRoutes);
-app.use('/api/users', authRoutes); // This enables `/api/users/me`
 app.use('/api', trendingRoutes);
-app.use('/api/trending-keywords', trendingRoutes);
-
-app.use('/api/pexels', pexelsRoutes);  // <-- Add this line for Pexels proxy
+app.use('/api/pexels', pexelsRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is running!');
