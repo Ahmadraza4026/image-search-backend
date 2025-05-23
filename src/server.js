@@ -18,15 +18,19 @@ const app = express();
 // Allow both localhost and deployed frontend origin
 const allowedOrigins = [
   'http://localhost:3000',
-  process.env.CLIENT_URL
+  process.env.CLIENT_URL,
 ];
+
+// Clean undefined or empty entries
+const allowed = allowedOrigins.filter(Boolean);
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    console.log('CORS origin:', origin);
+    if (!origin || allowed.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
     }
   },
   credentials: true,
