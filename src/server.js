@@ -15,8 +15,20 @@ import pexelsRoutes from './routes/pexelsRoutes.js';
 
 const app = express();
 
+// Allow both localhost and deployed frontend origin
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.CLIENT_URL
+];
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 };
 
